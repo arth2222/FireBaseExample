@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Legg inn Meny</title>
+    <script type="module">
+        // Importer nødvendige funksjoner fra Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+        import { firebaseConfig } from './firebaseConfig.js';
+
+        //// Firebase konfigurasjon
+        //const firebaseConfig = {
+        //    apiKey: "AIzaSyC4DNb1D9EK8TvgwL9PHGEDNLCmAfQZnbs",
+        //    authDomain: "kantine-2d875.firebaseapp.com",
+        //    projectId: "kantine-2d875",
+        //    storageBucket: "kantine-2d875.appspot.com",
+        //    messagingSenderId: "837764521514",
+        //    appId: "1:837764521514:web:a9e7dc1326df927ea3ed53",
+        //    measurementId: "G-CD6C3X6PWP"
+        //};
+
+        // Initialiser Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Legg til menydata i Firestore
+        document.getElementById('menu-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = document.getElementById('text').value;
+            const price = document.getElementById('price').value;
+            try {
+                await addDoc(collection(db, 'menu'), {
+                    text: text,
+                    price: price
+                });
+                document.getElementById('menu-form').reset();
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Admin - Legg inn Meny</h1>
+    <form id="menu-form">
+        <input type="text" id="text" placeholder="Menytekst" required>
+        <input type="number" id="price" placeholder="Pris" required>
+        <button type="submit">Legg til</button>
+    </form>
+</body>
+</html>

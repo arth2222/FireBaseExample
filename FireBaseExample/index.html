@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Ukas Meny</title>
+    <script type="module">
+        // Importer nødvendige funksjoner fra Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+        import { firebaseConfig } from './firebaseConfig.js';
+
+       
+
+        // Initialiser Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Hent menydata fra Firestore
+        async function fetchMenu() {
+            const menuList = document.getElementById('menu-list');
+            const querySnapshot = await getDocs(collection(db, 'menu'));
+            menuList.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const item = doc.data();
+                const li = document.createElement('li');
+                li.textContent = `${item.text} - ${item.price} NOK`;
+                menuList.appendChild(li);
+            });
+        }
+
+        // Kall funksjonen for å hente menydata når siden lastes
+        window.onload = fetchMenu;
+    </script>
+</head>
+<body>
+    <h1>Ukas Meny</h1>
+    <ul id="menu-list"></ul>
+</body>
+</html>
